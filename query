@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+require("dotenv").load();
+const cosmos = require("@azure/cosmos");
+const CosmosClient = cosmos.CosmosClient;
+
+const { endpoint, masterKey, databaseId } = process.env;
+
+const client = new CosmosClient({ endpoint, auth: { masterKey } });
+
+const readDatabase = async () => {
+  const db = await client.database(databaseId);
+
+  const { body: databaseDefinition } = await client.database(databaseId).read();
+  console.log(`Reading database:\n${databaseDefinition.id}\n`);
+
+  const { result: containersList } = await db.containers.readAll().toArray();
+  console.log(containersList.map(r => r.id));
+};
+
+readDatabase().catch(err => {
+  console.error(err);
+});
