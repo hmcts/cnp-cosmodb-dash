@@ -1,20 +1,30 @@
 #!/usr/bin/env node
+
 require("dotenv").load();
 const cosmos = require("@azure/cosmos");
 const CosmosClient = cosmos.CosmosClient;
 
-const { endpoint, masterKey, databaseId } = process.env;
+const { endpoint, masterKey, databaseId, containerId } = process.env;
 
 const client = new CosmosClient({ endpoint, auth: { masterKey } });
 
 const readDatabase = async () => {
   const db = await client.database(databaseId);
+  const container = db.container(containerId);
 
-  const { body: databaseDefinition } = await client.database(databaseId).read();
-  console.log(`Reading database:\n${databaseDefinition.id}\n`);
+  const queryIterator = container.items.query({
+    query: `SELECT
+      TOP 20 c.build_tag,c.current_build_duration
+      FROM c where
+      c.current_build_scheduled_time > '2018-09-10T00:00:00Z'
+      and c.current_build_current_result = 'SUCCESS'
+      and c.current_step_name = 'Pipeline Succeeded'
+      and STARTSWITH(c.build_url ,'https://build')
+      and NOT CONTAINS(c.build_tag, 'Nightly')`
+  });
 
-  const { result: containersList } = await db.containers.readAll().toArray();
-  console.log(containersList.map(r => r.id));
+  const { result: docs } = await queryIterator.toArray();
+  console.log(docs);
 };
 
 readDatabase().catch(err => {
