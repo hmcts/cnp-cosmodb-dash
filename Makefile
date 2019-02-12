@@ -1,17 +1,17 @@
 .DEFAULT_GOAL := graph
 
-dependencies: node_modules
-
 node_modules:
 	@echo Installing dependencies...
 	@npm install && npm audit fix
 
+dependencies: node_modules
+
 graph: node_modules
 	@clear
-	@echo "\n\n\t\tINFO: *** Press Q or Esc to quit ***\n\n"
-	@node src/graph.js
+	@echo "\n\t*** Press Q or Esc to quit ***\n"
+	@node src/index.js
 
 test: node_modules
-	@node src/utils.test.js
+	@for spec in src/*.test.js; do node $$spec; done
 
 .PHONY: dependencies graph test
