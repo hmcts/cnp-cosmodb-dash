@@ -15,7 +15,7 @@ module.exports = async (jobName, stepName) => {
       c._ts,c.current_build_duration,c.job_name
       FROM c where
       STARTSWITH(c.job_name, '${jobName}')
-      and c.current_build_scheduled_time > '2018-10-10T00:00:00Z'
+      and c.current_build_scheduled_time > '2018-11-10T00:00:00Z'
       and c.current_build_current_result = 'SUCCESS'
       and c.current_step_name = '${stepName}'
       and STARTSWITH(c.build_url ,'https://build')

@@ -1,8 +1,12 @@
 const blessed = require("blessed");
 const contrib = require("blessed-contrib");
 const getData = require("./getData");
-const { getCoordinates, toHumanDate, toMinutes } = require("./utils");
-const filterOutliers = require("./filterOutliers");
+const {
+  getCoordinates,
+  toHumanDate,
+  toMinutes,
+  filterOutliers
+} = require("./utils");
 
 const screen = blessed.screen();
 screen.key(["escape", "q", "C-c"], function(ch, key) {
@@ -11,12 +15,12 @@ screen.key(["escape", "q", "C-c"], function(ch, key) {
 
 const grid = new contrib.grid({ rows: 12, cols: 12, screen: screen });
 
-const stepName = "buildinfra:aat"; //"dockerbuild"; // "buildinfra:aat"
+const stepName = "buildinfra:aat"; // possible values: "dockerbuild", "buildinfra:aat", etc.
 
 const formatData = async jobName => {
   const rawData = await getData(jobName, stepName);
-  const outliersFilter = filterOutliers("current_build_duration")(rawData);
-  const filteredData = rawData.filter(outliersFilter);
+  const liarsOnBuildCurDuration = filterOutliers("current_build_duration");
+  const filteredData = rawData.filter(liarsOnBuildCurDuration(rawData));
   return {
     data: {
       x: filteredData.map(toHumanDate("_ts")),

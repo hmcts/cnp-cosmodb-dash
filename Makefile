@@ -11,4 +11,7 @@ graph: node_modules
 	@echo "\n\n\t\tINFO: *** Press Q or Esc to quit ***\n\n"
 	@node src/graph.js
 
-.PHONY: dependencies  graph
+test: node_modules
+	@node src/utils.test.js
+
+.PHONY: dependencies graph test
