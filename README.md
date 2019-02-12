@@ -1,19 +1,14 @@
 # CosmosDB queries
 
-### Installation
+### Run the simple query script
 
 ```shell
-$ npm install
-```
-
-### Run
-
-```shell
+$ make dependencies
 $ ./query
 ```
 
 ### Graph
 
 ```shell
-$ node src/graph.js
+$ make graph
 ```
