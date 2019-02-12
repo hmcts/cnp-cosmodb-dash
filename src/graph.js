@@ -2,6 +2,7 @@ const blessed = require("blessed");
 const contrib = require("blessed-contrib");
 const getData = require("./getData");
 const { getCoordinates, toHumanDate, toMinutes } = require("./utils");
+const filterOutliers = require("./filterOutliers");
 
 const screen = blessed.screen();
 screen.key(["escape", "q", "C-c"], function(ch, key) {
@@ -10,19 +11,23 @@ screen.key(["escape", "q", "C-c"], function(ch, key) {
 
 const grid = new contrib.grid({ rows: 12, cols: 12, screen: screen });
 
+const stepName = "buildinfra:aat"; //"dockerbuild"; // "buildinfra:aat"
+
 const formatData = async jobName => {
-  const rawData = await getData(jobName);
+  const rawData = await getData(jobName, stepName);
+  const outliersFilter = filterOutliers("current_build_duration")(rawData);
+  const filteredData = rawData.filter(outliersFilter);
   return {
     data: {
-      x: rawData.map(toHumanDate("_ts")),
-      y: rawData.map(toMinutes("current_build_duration"))
+      x: filteredData.map(toHumanDate("_ts")),
+      y: filteredData.map(toMinutes("current_build_duration"))
     },
     jobName
   };
 };
 
-const colWidth = 4;
-const colHeight = 4;
+const colWidth = 6;
+const colHeight = 6;
 const getCoord = getCoordinates(colWidth, colHeight);
 
 const setLine = ({ jobName, data }, index) => {
@@ -32,7 +37,9 @@ const setLine = ({ jobName, data }, index) => {
     style: { line: "yellow", text: "white", baseline: "white" },
     xLabelPadding: 3,
     xPadding: 5,
-    label: ` Duration in minutes (${jobName}) `
+    label: ` Build duration till ${stepName} in min. (${
+      jobName.match(/\/(.*)\//)[1]
+    }) `
   });
   screen.append(line); // must append before setting data
   line.setData([data]);
@@ -43,10 +50,8 @@ const main = async () => {
     [
       "HMCTS_CDM/ccd-case-print-service/master",
       "HMCTS_CMC/cmc-legal-rep-frontend/master",
-      "HMCTS_SSCS/sscs-track-your-appeal-notifications/master",
       "HMCTS_CDM/ccd-admin-web/master",
-      "HMCTS_CDM/ccd-case-management-web/master",
-      "HMCTS_SSCS/sscs-track-your-appeal-notifications/master"
+      "HMCTS_CDM/ccd-case-management-web/master"
     ].map(formatData)
   );
 

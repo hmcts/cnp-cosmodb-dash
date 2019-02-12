@@ -6,7 +6,7 @@ const { endpoint, masterKey, databaseId, containerId } = process.env;
 
 const client = new CosmosClient({ endpoint, auth: { masterKey } });
 
-module.exports = async jobName => {
+module.exports = async (jobName, stepName) => {
   const db = await client.database(databaseId);
   const container = db.container(containerId);
 
@@ -17,7 +17,7 @@ module.exports = async jobName => {
       STARTSWITH(c.job_name, '${jobName}')
       and c.current_build_scheduled_time > '2018-10-10T00:00:00Z'
       and c.current_build_current_result = 'SUCCESS'
-      and c.current_step_name = 'buildinfra:aat'
+      and c.current_step_name = '${stepName}'
       and STARTSWITH(c.build_url ,'https://build')
       and NOT CONTAINS(c.build_tag, 'Nightly')
       ORDER BY c._ts ASC`
