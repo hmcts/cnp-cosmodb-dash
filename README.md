@@ -11,3 +11,9 @@ $ npm install
 ```shell
 $ ./query
 ```
+
+### Graph
+
+```shell
+$ node src/graph.js
+```

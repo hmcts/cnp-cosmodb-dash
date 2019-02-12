@@ -1,8 +1,8 @@
 const { format } = require("date-fns");
 
-exports.getCoordinates = sqSize => index => [
-  sqSize * (index % 2),
-  sqSize * Math.ceil((index + 1) / 2) - sqSize
+exports.getCoordinates = (colWidth, colHeigh) => index => [
+  colHeigh * (index % 2),
+  colWidth * Math.ceil((index + 1) / 2) - colWidth
 ];
 
 exports.toHumanDate = attr => d =>

@@ -26,5 +26,3 @@ module.exports = async jobName => {
   const { result: docs } = await queryIterator.toArray();
   return docs;
 };
-
-// and c.current_step_name = 'Pipeline Succeeded'

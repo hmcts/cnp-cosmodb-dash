@@ -22,12 +22,13 @@ const formatData = async jobName => {
 };
 
 const colWidth = 4;
-const getCoord = getCoordinates(colWidth);
+const colHeight = 4;
+const getCoord = getCoordinates(colWidth, colHeight);
 
 const setLine = ({ jobName, data }, index) => {
   const [x, y] = getCoord(index);
 
-  const line = grid.set(x, y, colWidth, colWidth, contrib.line, {
+  const line = grid.set(x, y, colHeight, colWidth, contrib.line, {
     style: { line: "yellow", text: "white", baseline: "white" },
     xLabelPadding: 3,
     xPadding: 5,
