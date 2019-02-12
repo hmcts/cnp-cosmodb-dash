@@ -5,7 +5,8 @@ const {
   getCoordinates,
   toHumanDate,
   toMinutes,
-  filterOutliers
+  filterOutliers,
+  kuler
 } = require("./utils");
 
 const screen = blessed.screen();
@@ -13,7 +14,12 @@ screen.key(["escape", "q", "C-c"], function(ch, key) {
   return process.exit(0);
 });
 
-const grid = new contrib.grid({ rows: 12, cols: 12, screen: screen });
+const grid = new contrib.grid({
+  rows: 12,
+  cols: 12,
+  screen: screen,
+  hideBorder: true
+});
 
 const stepName = "buildinfra:aat"; // possible values: "dockerbuild", "buildinfra:aat", etc.
 
@@ -30,20 +36,21 @@ const formatData = async jobName => {
   };
 };
 
-const colWidth = 6;
-const colHeight = 6;
-const getCoord = getCoordinates(colWidth, colHeight);
+const rowSpan = 6;
+const colSpan = 6;
+const getCoord = getCoordinates(rowSpan, colSpan);
 
-const setLine = ({ jobName, data }, index) => {
+const setLineGraph = ({ jobName, data }, index) => {
   const [x, y] = getCoord(index);
 
-  const line = grid.set(x, y, colHeight, colWidth, contrib.line, {
-    style: { line: "yellow", text: "white", baseline: "white" },
+  const line = grid.set(x, y, colSpan, rowSpan, contrib.line, {
+    style: { line: kuler(), text: "white", baseline: "white" },
     xLabelPadding: 3,
     xPadding: 5,
     label: ` Build duration till ${stepName} in min. (${
       jobName.match(/\/(.*)\//)[1]
-    }) `
+    }) `,
+    showNthLabel: 5
   });
   screen.append(line); // must append before setting data
   line.setData([data]);
@@ -59,7 +66,7 @@ const main = async () => {
     ].map(formatData)
   );
 
-  dataSet.forEach(setLine);
+  dataSet.forEach(setLineGraph);
 
   screen.render();
 };

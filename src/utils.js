@@ -32,3 +32,9 @@ exports.toHumanDate = attr => d =>
   format(new Date(d[attr] * 1000), "DD/MM/YYYY");
 
 exports.toMinutes = attr => d => (d[attr] / 1000 / 60) << 0;
+
+exports.kuler = () => [
+  (0.8 * Math.random() + 0.2) * 255,
+  (0.8 * Math.random() + 0.2) * 255,
+  (0.8 * Math.random() + 0.2) * 255
+];
