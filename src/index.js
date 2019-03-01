@@ -11,16 +11,16 @@ const render = require('./render')
 const jobNames = [
   {
     jobName: 'HMCTS_CDM/ccd-case-print-service/master',
-    stepName: 'buildinfra:aat',
+    stepName: 'dockerbuild',
   },
   {
-    jobName: 'HMCTS_CMC/cmc-legal-rep-frontend/master',
-    stepName: 'buildinfra:aat',
+    jobName: 'HMCTS_CMC/cmc-citizen-frontend/master',
+    stepName: 'dockerbuild',
   },
-  { jobName: 'HMCTS_CDM/ccd-admin-web/master', stepName: 'buildinfra:aat' },
+  { jobName: 'HMCTS_CDM/ccd-admin-web/master', stepName: 'dockerbuild' },
   {
-    jobName: 'HMCTS_CDM/ccd-case-management-web/master',
-    stepName: 'buildinfra:aat',
+    jobName: 'HMCTS_Probate/probate-frontend/master',
+    stepName: 'dockerbuild',
   },
 ]
 
