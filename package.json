@@ -4,7 +4,7 @@
   "description": "### Installation",
   "main": "graph.js",
   "dependencies": {
-    "@azure/cosmos": "^2.1.2",
+    "@azure/cosmos": "^2.1.7",
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.8.10",
     "date-fns": "^1.30.1",
